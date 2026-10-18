@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Safety Analytics - Smart LPG Leak Detection System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Disclaimer Banner -->
+  <div class="disclaimer-banner">
+    <span>⚠️</span>
+    <div>
+      <strong>Academic Prototype & Simulation:</strong>
+      Analytics represent simulated telemetry and demonstration safety incident events.
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">📊</div>
+      <div>
+        <h1>Safety Analytics & Incident History</h1>
+        <div class="brand-subtitle">Smart LPG Safety System Historical Analysis</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="/" class="nav-link">Dashboard</a>
+      <a href="/analytics.html" class="nav-link active">Analytics</a>
+      <a href="/docs" target="_blank" class="nav-link">API Docs</a>
+    </div>
+  </header>
+
+  <!-- Main Analytics Area -->
+  <main>
+    
+    <!-- KPI Summary Grid -->
+    <section class="grid-top">
+      
+      <div class="card">
+        <span class="card-title">Peak Gas Concentration</span>
+        <div class="metric-value-container" style="margin-top: 8px;">
+          <span id="kpi-max-gas" class="metric-big">0.0</span>
+          <span class="metric-unit">PPM</span>
+        </div>
+        <div class="metric-secondary">
+          <span>Demonstration peak</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Average Gas Level</span>
+        <div class="metric-value-container" style="margin-top: 8px;">
+          <span id="kpi-avg-gas" class="metric-big">0.0</span>
+          <span class="metric-unit">PPM</span>
+        </div>
+        <div class="metric-secondary">
+          <span>Cumulative mean</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Safety Incidents</span>
+        <div class="metric-value-container" style="margin-top: 8px;">
+          <span id="kpi-warnings" class="metric-big" style="color: var(--warning);">0</span>
+          <span class="metric-unit">Warn /</span>
+          <span id="kpi-dangers" class="metric-big" style="color: var(--critical);">0</span>
+          <span class="metric-unit">Danger</span>
+        </div>
+        <div class="metric-secondary">
+          <span>Escalations recorded</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <span class="card-title">Shut-offs & Faults</span>
+        <div class="metric-value-container" style="margin-top: 8px;">
+          <span id="kpi-shutoffs" class="metric-big" style="color: var(--danger);">0</span>
+          <span class="metric-unit">Shutoffs /</span>
+          <span id="kpi-faults" class="metric-big" style="color: var(--text-muted);">0</span>
+          <span class="metric-unit">Faults</span>
+        </div>
+        <div class="metric-secondary">
+          <span>Monitored: <strong id="kpi-time">0m 0s</strong></span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Hourly Trends Chart -->
+    <section class="card" style="min-height: 380px;">
+      <div class="card-header">
+        <span class="card-title">Hourly Gas Exposure & Peak Analysis</span>
+        <span style="font-size: 0.8rem; color: var(--text-dim); font-family: var(--font-mono);">
+          Aggregated by hour buckets from SQLite
+        </span>
+      </div>
+      <div class="chart-container" style="height: 320px;">
+        <canvas id="hourlyChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Historical Incidents Table -->
+    <section class="card events-card">
+      <div class="table-toolbar">
+        <span class="card-title">Recent Safety Interventions & Actuations</span>
+        <button id="btn-refresh-analytics" class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.8rem;">
+          ↻ Refresh Data
+        </button>
+      </div>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp (UTC)</th>
+              <th>Event Type</th>
+              <th>Risk Level</th>
+              <th>Gas (PPM)</th>
+              <th>Valve State</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="analyticsEventsTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-dim);">Loading analytics events...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/js/analytics.js"></script>
+</body>
+</html>

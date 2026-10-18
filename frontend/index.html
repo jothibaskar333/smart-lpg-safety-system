@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart LPG Leak Detection & Automatic Shut-Off System</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <!-- Chart.js CDN with fallback handling -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Academic Safety Disclaimer -->
+  <div class="disclaimer-banner">
+    <span>⚠️</span>
+    <div>
+      <strong>Academic Prototype & Simulation:</strong>
+      This project demonstrates safety principles and rate-of-rise algorithms using demonstration thresholds.
+      It is <em>not certified</em> for real LPG installations and must <em>not</em> be connected to real gas supplies.
+    </div>
+  </div>
+
+  <!-- Top Navigation Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🔥</div>
+      <div>
+        <h1>Smart LPG Safety System</h1>
+        <div class="brand-subtitle">IoT Leak Detection & Automatic Shut-Off Simulation</div>
+      </div>
+    </div>
+
+    <div class="nav-links">
+      <a href="/" class="nav-link active">Dashboard</a>
+      <a href="/analytics.html" class="nav-link">Analytics</a>
+      <a href="/docs" target="_blank" class="nav-link">API Docs</a>
+      
+      <div class="header-status-badge">
+        <div id="sim-status-dot" class="status-dot pulsing"></div>
+        <span id="sim-status-label">SIM RUNNING</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Area -->
+  <main>
+    <!-- TOP ROW: 4 Status Cards -->
+    <section class="grid-top">
+      
+      <!-- 1. Risk Level Hero Card -->
+      <div id="risk-card" class="card risk-card SAFE">
+        <div class="card-header">
+          <span class="card-title">Risk Assessment</span>
+          <span id="risk-time-badge" class="badge">LIVE</span>
+        </div>
+        <div id="risk-level-badge" class="risk-badge">SAFE</div>
+        <div id="risk-reason-text" class="risk-subtext">Gas concentration within safe limits</div>
+      </div>
+
+      <!-- 2. Gas Concentration Telemetry -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Gas Concentration (MQ-5/6)</span>
+          <span id="ror-badge" class="ror-badge">RoR: 0.0 ppm/s</span>
+        </div>
+        <div class="metric-value-container">
+          <span id="filtered-gas-val" class="metric-big">0.0</span>
+          <span class="metric-unit">PPM (Filtered)</span>
+        </div>
+        <div class="metric-secondary">
+          <span>Raw: <strong id="raw-gas-val">0.0</strong> ppm</span>
+          <span>Δ: <strong id="roc-val">+0.0</strong> ppm</span>
+        </div>
+        <div class="metric-secondary" style="margin-top: 4px;">
+          <span>Temp: <strong id="temp-val">24.5</strong>°C</span>
+          <span>Humidity: <strong id="hum-val">52.0</strong>%</span>
+        </div>
+      </div>
+
+      <!-- 3. Simulated Valve Actuator -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Simulated Servo Valve</span>
+          <span id="valve-source-badge" class="badge">AUTO</span>
+        </div>
+        <div class="valve-display">
+          <div id="valve-icon" class="valve-icon-wrapper OPEN">
+            ⎋
+          </div>
+          <div class="valve-details">
+            <div id="valve-state-text" class="valve-state-text" style="color: var(--safe);">OPEN</div>
+            <div id="valve-angle-text" class="valve-angle-text">Servo: 90.0°</div>
+            <div id="valve-desc-text" class="metric-secondary" style="border:none; padding:0; margin-top:2px;">Gas supply normal</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. Alert Peripherals & ML Anomaly -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Safety Peripherals & ML</span>
+          <span id="sensor-health-badge" class="badge" style="color: var(--safe);">HEALTHY</span>
+        </div>
+        <div class="alert-indicators">
+          <div class="annunciator">
+            <div id="led-warning" class="led warn"></div>
+            <span>WARN LED</span>
+          </div>
+          <div class="annunciator">
+            <div id="led-danger" class="led danger"></div>
+            <span>DANGER LED</span>
+          </div>
+          <div class="buzzer-box">
+            <span>Simulated Buzzer:</span>
+            <span id="buzzer-tag" class="buzzer-state-tag OFF">OFF</span>
+          </div>
+        </div>
+        <div class="metric-secondary" style="margin-top: 10px;">
+          <span>ML Anomaly: <strong id="ml-status-text" style="color: var(--safe);">NORMAL</strong></span>
+          <span id="ml-score-text" style="font-family: var(--font-mono); font-size: 0.75rem;">Score: 0.42</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- MIDDLE ROW: Live Chart & Interactive Controls -->
+    <section class="grid-middle">
+      
+      <!-- Live Real-Time Telemetry Chart -->
+      <div class="card chart-card">
+        <div class="card-header">
+          <span class="card-title">Live Gas Concentration & Rate-of-Rise Tracking</span>
+          <div style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono);">
+            Warning: 200 ppm | Danger: 400 ppm | Critical: 700 ppm
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="gasChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Control Center -->
+      <div class="card controls-card">
+        <div class="card-header">
+          <span class="card-title">Scenario & Actuator Controls</span>
+        </div>
+
+        <!-- Simulation Scenario Selector -->
+        <div class="form-group">
+          <label class="form-label" for="scenarioSelect">Select Simulation Scenario</label>
+          <select id="scenarioSelect" class="select-control">
+            <option value="NORMAL">1. Normal Operation (Clean Air)</option>
+            <option value="SLOW_LEAK">2. Slow Gas Leak (Gradual Ramp)</option>
+            <option value="SUDDEN_LEAK">3. Sudden Gas Leak (Sharp Rise)</option>
+            <option value="RAPID_SPIKE">4. Rapid Gas Spike (Surge Test)</option>
+            <option value="NOISY_SENSOR">5. Noisy Sensor (Jitter / Filtering)</option>
+            <option value="SENSOR_RECOVERY">6. Sensor Recovery (Ventilation)</option>
+            <option value="SENSOR_FAILURE">7. Sensor Failure (Out-of-range/Stuck)</option>
+          </select>
+        </div>
+
+        <!-- Simulation Loop Buttons -->
+        <div class="btn-group">
+          <button id="btn-toggle-sim" class="btn btn-secondary">
+            ⏸️ Pause Sim
+          </button>
+          <button id="btn-reset-scenario" class="btn btn-secondary">
+            ↺ Reset Baseline
+          </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Manual Valve Controls with Confirmation -->
+        <div class="form-group">
+          <label class="form-label">Manual Valve Override (Requires Confirm)</label>
+          <div class="btn-group">
+            <button id="btn-valve-open" class="btn btn-safe">
+              🔓 Open Valve
+            </button>
+            <button id="btn-valve-close" class="btn btn-danger">
+              🔒 Close Valve
+            </button>
+          </div>
+          <button id="btn-system-reset" class="btn btn-warning" style="margin-top: 8px;">
+            ⚡ Clear Safety Lockout & Reset
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- BOTTOM ROW: Persistent Event Log Table -->
+    <section class="card events-card">
+      <div class="table-toolbar">
+        <div>
+          <span class="card-title">Safety Incident & State Transition Log</span>
+        </div>
+        <div class="table-filters">
+          <select id="filterEventType" class="select-control" style="padding: 4px 8px; font-size: 0.78rem;">
+            <option value="">All Event Types</option>
+            <option value="GAS_WARNING">GAS_WARNING</option>
+            <option value="GAS_DANGER">GAS_DANGER</option>
+            <option value="GAS_CRITICAL">GAS_CRITICAL</option>
+            <option value="RAPID_GAS_RISE">RAPID_GAS_RISE</option>
+            <option value="AUTOMATIC_SHUTOFF">AUTOMATIC_SHUTOFF</option>
+            <option value="MANUAL_SHUTOFF">MANUAL_SHUTOFF</option>
+            <option value="MANUAL_OPEN">MANUAL_OPEN</option>
+            <option value="VALVE_RESET">VALVE_RESET</option>
+            <option value="SENSOR_FAULT">SENSOR_FAULT</option>
+            <option value="SENSOR_RECOVERY">SENSOR_RECOVERY</option>
+          </select>
+
+          <select id="filterRiskLevel" class="select-control" style="padding: 4px 8px; font-size: 0.78rem;">
+            <option value="">All Risk Levels</option>
+            <option value="SAFE">SAFE</option>
+            <option value="WARNING">WARNING</option>
+            <option value="DANGER">DANGER</option>
+            <option value="CRITICAL">CRITICAL</option>
+          </select>
+
+          <button id="btn-refresh-events" class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.78rem;">
+            Refresh
+          </button>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp (UTC)</th>
+              <th>Event Type</th>
+              <th>Risk Level</th>
+              <th>Gas (PPM)</th>
+              <th>Valve</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-dim);">Awaiting system events...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Manual Action Confirmation Modal -->
+  <div id="confirmModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-icon">⚠️</div>
+        <div id="modalTitle" class="modal-title">Confirm Manual Action</div>
+      </div>
+      <div id="modalBody" class="modal-body">
+        Are you sure you want to proceed with this manual override?
+      </div>
+      <div class="modal-footer">
+        <button id="btn-modal-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="btn-modal-proceed" class="btn btn-primary">Confirm & Execute</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Dashboard JavaScript -->
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
