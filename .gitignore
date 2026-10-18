@@ -50,3 +50,6 @@ htmlcov/
 
 # Logs
 *.log
+
+# Accidental nested repository
+/smart-lpg-safety-system/
