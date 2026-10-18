@@ -161,3 +161,4 @@ class SensorSimulator:
         self._failure_cycle = 0
         self.temperature = 24.5
         self.humidity = 52.0
+

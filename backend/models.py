@@ -144,3 +144,4 @@ class AnalyticsResponse(BaseModel):
     total_monitoring_seconds: float
     hourly_trends: List[HourlyTrend]
     recent_events: List[EventLogEntry]
+

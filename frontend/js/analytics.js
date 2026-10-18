@@ -139,3 +139,4 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRefresh.addEventListener("click", loadAnalytics);
   }
 });
+

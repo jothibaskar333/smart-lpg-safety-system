@@ -198,3 +198,4 @@ void executeSafetyActions(RiskLevel risk, bool rapidRise) {
     }
   }
 }
+

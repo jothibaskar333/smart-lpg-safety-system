@@ -253,3 +253,4 @@ class DatabaseManager:
 
 # Singleton database instance
 db = DatabaseManager()
+

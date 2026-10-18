@@ -134,3 +134,4 @@ class RiskEngine:
         self.current_risk = RiskLevel.SAFE
         self.last_rapid_rise = False
         self.last_reason = "Nominal safe environment"
+

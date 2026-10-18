@@ -94,3 +94,4 @@ class MQTTClientHandler:
 
 # Singleton instance
 mqtt_handler = MQTTClientHandler()
+

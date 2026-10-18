@@ -129,3 +129,4 @@ class SystemConfig:
 
 # Singleton configuration instance
 settings = SystemConfig()
+

@@ -141,3 +141,4 @@ class ValveController:
         self.last_action_timestamp = time.time()
         self.last_action_description = "Safety lockout cleared; system and valve reset to normal OPEN"
         return True, "Safety lockout successfully reset. Valve restored to OPEN"
+

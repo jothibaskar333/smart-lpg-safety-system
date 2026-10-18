@@ -123,3 +123,4 @@ def test_simulator_scenarios():
     rec_sample1 = sim.generate_reading()
     rec_sample2 = sim.generate_reading()
     assert rec_sample2["raw_gas"] < rec_sample1["raw_gas"]
+

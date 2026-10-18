@@ -147,3 +147,4 @@ Before passing readings to the safety core, the sensor health monitor screens ev
 3. **Discontinuous Jump Check:** Detects electrical short-circuits or spikes exceeding $\frac{dGas}{dt} > 350.0 \text{ PPM/sec}$.
 4. **Stuck Sensor Check:** Evaluates whether $N=8$ consecutive readings have strictly zero natural variance, detecting frozen ADCs or dead sensor elements.
 5. **Watchdog Timeout:** Flags communication timeout if telemetry stops arriving for $> 5.0$ seconds.
+

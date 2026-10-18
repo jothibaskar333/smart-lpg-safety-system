@@ -128,3 +128,4 @@ def test_sensor_fault_elevates_risk(engine):
     )
     assert risk == RiskLevel.WARNING
     assert "Sensor hardware fault" in reason
+

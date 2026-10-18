@@ -117,3 +117,4 @@ def system_reset(req: SystemResetRequest) -> Dict[str, Any]:
     if not success:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=msg)
     return {"success": True, "message": msg, "risk_level": "SAFE", "valve_state": "OPEN"}
+

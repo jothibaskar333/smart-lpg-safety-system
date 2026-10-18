@@ -63,3 +63,4 @@ This optional sketch demonstrates how the simulated software logic (moving avera
    - **DANGER / CRITICAL (>= 400 ADC or Rapid RoR):** Servo drives to 0° (Valve Closed) and latches until reset.
 5. **Optional MQTT Telemetry:**
    Optionally connects to local Wi-Fi to publish JSON telemetry packets to the backend server's Mosquitto broker.
+

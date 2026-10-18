@@ -122,3 +122,4 @@ def test_system_reset_blocked_during_hazard(valve):
     success, msg = valve.reset_system(confirmed=True, current_risk=RiskLevel.SAFE)
     assert success is True
     assert valve.state == ValveState.OPEN
+

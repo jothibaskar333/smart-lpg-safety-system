@@ -102,3 +102,4 @@ class AlertManager:
         self.danger_led = False
         self.last_logged_risk = None
         self.last_rapid_rise_time = 0.0
+

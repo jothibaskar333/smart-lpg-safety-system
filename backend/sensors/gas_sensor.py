@@ -185,3 +185,4 @@ class GasSensorModel:
         self._last_raw = None
         self._last_timestamp = None
         self._sma_buffer.clear()
+

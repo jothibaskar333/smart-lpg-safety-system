@@ -495,3 +495,4 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(pollStatus, 1000);   // Telemetry every 1 second
   setInterval(fetchEvents, 3000);  // Event log every 3 seconds
 });
+
